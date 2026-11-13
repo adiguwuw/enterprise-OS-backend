@@ -10,7 +10,7 @@ Istilah “service” pada roadmap bermakna domain module, bukan deployable micr
 Di WSL Docker Compose menjalankan Postgres, Keycloak; RabbitMQ hanya Phase 5. Hosted: Vercel Hobby untuk SPA + Go HTTP function; Neon Free DB; Auth0 Free OIDC; CloudAMQP free optional. Vercel bukan worker persistent. Tanpa Redis, provider berbayar, upgrade atau billing.
 
 ## API dan data
-/ api/v1 (tanpa spasi; canonical path /api/v1), OpenAPI 3.1; Bearer access token; cursor pagination; standard error; Idempotency-Key dan ETag/If-Match. Data PostgreSQL dibatasi schema/domain owner. FK hanya dalam bounded context; cross-context opaque IDs + APIs/events. DB transaction menulis aggregate dan audit/outbox; no network call dalam transaction.
+/api/v1, OpenAPI 3.1; Bearer access token; cursor pagination; standard error; Idempotency-Key dan ETag/If-Match. Data PostgreSQL dibatasi schema/domain owner. FK hanya dalam bounded context; cross-context opaque IDs + APIs/events. DB transaction menulis aggregate dan audit/outbox; no network call dalam transaction.
 
 ## Test-driven development
 Tulis scenario ID dari module spec sebagai test yang gagal dahulu; unit untuk policy/domain, integration real PostgreSQL + migration, contract OpenAPI/event, E2E per journey, security negative authz/IDOR/injection. Jalankan tests terkait tiap perubahan, full suite sebelum merge. Jangan update status acceptance tanpa hasil.
