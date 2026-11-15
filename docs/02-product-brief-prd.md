@@ -21,3 +21,7 @@ Login → lihat org chart → cari directory → ajukan/minta keputusan kerja re
 
 ## Batas
 Tidak memakai data pegawai nyata, bukan pengganti HR legal/payroll/statutory, tidak melakukan pengenalan wajah/monitoring kontinyu, tidak membuat keputusan HR otomatis, tidak mengklaim menyerupai proses internal Telkom. No paid service/billing. Produk diimplementasikan per vertical slice; fitur fase akhir bukan MVP.
+
+
+## Role presensi demo
+Employee: punch dan request sendiri; Manager: review request/team dalam scope; Attendance Policy Admin: mengelola policy/lokasi/CIDR scope tertentu; Attendance Policy Approver: menyetujui versi policy oleh orang lain; HR Attendance Admin: laporan/koreksi scope HR; Auditor: membaca audit dan policy history; Org Admin: kelola struktur/lokasi; IAM Admin: grant role non-global dalam scope; Platform Admin: platform setup tanpa akses HR otomatis. Assignment akun demo sintetis.
