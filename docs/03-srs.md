@@ -1,25 +1,30 @@
 # SRS dan Kriteria Penerimaan Lintas Modul
 
 ## Functional requirements
-- FR-01 OIDC Authorization Code + PKCE dan validasi access token API.
-- FR-02 principal terikat issuer+subject unik, bukan email saja; disable/revoke.
-- FR-03 permission berupa resource/action; role mengelompokkan permission; assignment mempunyai scope dan masa berlaku.
-- FR-04 ABAC server-side memeriksa scope, relasi resource, status dan waktu; default deny.
-- FR-05 organisasi bertingkat berversi/efektif tanggal, lokasi dan position catalog; cegah cycle.
-- FR-06 data employee/employment/assignment dan lifecycle; pemisahan field sensitif.
-- FR-07 directory searchable, paginated, masked, visibility controlled.
-- FR-08 mutasi penting audit redacted, outbox jika event dipakai.
-- FR-09 fase lanjut mematuhi spesifikasi per modul; tak ada query DB lintas domain.
-- FR-10 API errors konsisten dan punya request_id.
+- FR-01 OIDC Authorization Code + PKCE; API memverifikasi access token issuer/audience/signature/expiry.
+- FR-02 principal terikat issuer+subject unik; disable/revoke tidak bergantung pada email.
+- FR-03 role mengelompokkan permission resource/action; grant memiliki scope, validity dan default deny.
+- FR-04 ABAC server-side mempertimbangkan scope org, relasi resource, state dan waktu.
+- FR-05 organisasi bertingkat efektif tanggal, work location dan position catalog; cegah siklus.
+- FR-06 employee, employment, assignment dan lifecycle dengan field sensitif dibatasi.
+- FR-07 directory searchable, paginated, masked dan scope controlled.
+- FR-08 HR workflows memiliki maker/checker jika disyaratkan, alasan keputusan, audit dan concurrency control.
+- FR-09 presensi WFO mencocokkan request IP dengan CIDR publik kantor yang dikonfigurasi; tidak memakai SSID browser.
+- FR-10 WFH/WFA perlu remote-work request yang disetujui atasan, tanggal berlaku, alasan pegawai dan alasan keputusan atasan sebelum punch remote.
+- FR-11 setiap punch check-in/out merujuk foto bukti privat yang terunggah dan koordinat GPS + accuracy/time; reject payload kurang, mime/size invalid, lokasi tidak memenuhi policy. Beri jalur koreksi manual audited.
+- FR-12 presensi mengembalikan WorkLocation/kecamatan dari konfigurasi kantor untuk WFO; jangan menyimpulkan kecamatan dari IP publik. WFH/WFA memakai koordinat dan label wilayah terverifikasi/master data jika dipakai.
+- FR-13 foto disimpan di private Supabase bucket via signed upload direct browser-to-storage; Express mengeluarkan URL/object key terbatas, melakukan confirm ownership/metadata; file tidak diproxy Vercel.
+- FR-14 mutasi sensitif audit redacted; outbox/event hanya saat consumer konkret ada.
+- FR-15 API errors konsisten dengan request_id.
 
-## NFR
-Security: TLS hosted, JWT verification, server authorization, parameterized SQL, CORS allowlist, CSRF strategy bila cookie, rate/body limits, secrets env. Privacy: synthetic data, minimization, no PII in logs/traces, retention documented. Reliability: atomic state transitions, idempotent retries, optimistic concurrency, explicit degradation. Performance: cursor pagination, bounded query, index dari access pattern, ukur baseline demo. Accessibility: keyboard, semantic labels, focus, contrast, reduced motion. Portability: Docker Compose dan instruksi WSL. Maintainability: OpenAPI, migrations, ADR, automated tests.
+## NFR presensi dan privacy
+Foto/koordinat merupakan bukti sensitif. Mintakan izin kamera/GPS hanya saat pegawai memulai punch, beri tujuan dan status upload yang jelas. Minimize accuracy metadata dan retention sesuai kebijakan demo. Akses foto hanya pegawai terkait dan reviewer berwenang; signed read URL berumur pendek. Audit akses bukti. Tidak ada background tracking, face recognition, atau raw image/coordinate di logs, events, traces, analytics, URL. TLS, private bucket, type/size allowlist, checksum, signed URL one-time/short TTL, object key non-guessable, cleanup orphan upload. Tidak menjanjikan anti-spoof atau kepatuhan hukum.
 
-## Konvensi data
-UUID, timestamptz UTC, date bisnis + timezone IANA, monetary NUMERIC + ISO currency. Terapkan DB constraints dan validasi domain. Historis tidak cascade-delete. Sensitive data minimization/masking.
+## NFR umum
+Parameterized SQL, input schema validation, CORS allowlist, rate/body limits, explicit trusted proxy, secrets via env. Liveness separate from readiness. Cursor pagination; bounded queries; atomic transitions; idempotency and If-Match where applicable. Accessibility keyboard/semantic labels/contrast. WSL + Docker Compose local. Hosted free tier is best effort, no SLA promise.
 
-## Acceptance lintas modul
-401 token invalid; 403 action tidak berizin; 404 untuk resource tak ada/di luar scope sesuai risiko enumeration; 409 domain/duplicate conflict; 412 stale version; 422 business validation; 429 throttling. Seluruh list max page size. Kasus rinci dan ID test ada di tiap dokumen modul dan matriks integrasi.
+## Konvensi data dan status
+UUID, timestamps UTC, business date + IANA timezone, money NUMERIC/currency. Cross-context opaque IDs, no FK/query across domains. 401 unauthenticated, 403 forbidden, 404 out-of-scope when needed to prevent enumeration, 409 conflict, 412 stale, 413 too large, 415 unsupported media, 422 domain validation, 429 rate limit.
 
-## Bukan klaim
-Tidak menyatakan patuh hukum Indonesia, setara proses internal Telkom, tahan audit legal, tersertifikasi, memiliki SLA produksi atau lulus pentest.
+## Klaim yang dilarang
+Jangan menyebut produk patuh UU PDP/aturan ketenagakerjaan, production-grade/anti-fraud/anti-spoof, SLA atau setara praktik Telkom tanpa validasi independen.
