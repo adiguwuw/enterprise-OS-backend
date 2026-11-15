@@ -32,3 +32,7 @@ No tokens, photos, storage URLs, raw coordinates, raw IP, private HR/payroll or 
 - POST /api/v1/attendance/admin/policy-versions/{id}/approve — hanya bila maker-checker aktif; approver berbeda dari creator.
 - GET /api/v1/attendance/admin/policies/{id}/history — riwayat versi/audit.
 Backend menolak nilai di luar batas keamanan, alasan kosong, overlap tanggal, scope tidak sah dan stale If-Match. Punch menyimpan policy_version_id. Versi yang sudah berlaku tidak dapat diedit; koreksi menjadi versi baru.
+
+## Seed values dan permission key
+Versi demo awal: timezone Asia/Jakarta; weekdays 09:00–17:00; break 12:00–13:00; grace 15 min; gps_radius_m=150; gps_max_accuracy_m=100; max_location_age_seconds=60; photo_retention_days=30; metadata_retention_days=365. Allowed server bounds respectively: 25–500 m; 10–200 m; 30–300 sec; 1–90 days; 30–3650 days. CIDR aktif harus dikonfigurasi Admin dan diverifikasi; tidak ada default valid CIDR.
+Permission keys: attendance.policy.read/manage/approve, attendance.location.manage, attendance.office_network.manage, attendance.self.read, attendance.remote_work.create/review, attendance.punch.create, attendance.evidence.read.self/read, attendance.team.read, attendance.adjustment.create/approve, attendance.policy.history.read. Check role + action + org/location/team scope server-side. Maker-checker active: creator cannot approve own policy version.
