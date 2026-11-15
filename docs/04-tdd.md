@@ -31,3 +31,6 @@ Test domain state machine, IP CIDR/trusted proxy, remote approval + reason, loca
 
 ## Policy management presensi
 Policy adalah aggregate berversi milik Attendance. Admin mengubahnya melalui API Dashboard; backend memvalidasi bounds, effective date, overlap, org/location scope, permission, reason dan If-Match. Simpan versi baru serta audit before/after atomik; bila maker-checker aktif, creator tidak dapat menyetujui versinya. Resolver memilih policy aktif pada waktu kerja dan punch menyimpan versi yang digunakan. Versi historis immutable; rollback dibuat sebagai versi baru. Cache tidak boleh melampaui effective boundary dan resolver fail closed bila tidak ada policy aktif.
+
+## Policy seed dan validasi
+Seeder demo membuat policy versi awal dengan nilai: Asia/Jakarta; Senin–Jumat 09:00–17:00; istirahat 12:00–13:00; grace 15 menit; radius GPS 150 m; max accuracy 100 m; location age 60 detik; photo retention 30 hari; metadata retention 365 hari. Server bounds: radius 25–500 m; accuracy 10–200 m; location age 30–300 detik; photo retention 1–90 hari; metadata retention 30–3650 hari. Admin boleh memilih angka dalam bounds; backend, bukan UI, memvalidasi. Office CIDR harus dimasukkan dan diverifikasi oleh Admin; tidak ada CIDR aktif default. Maker-checker aktif untuk publish policy, creator berbeda dari approver.
