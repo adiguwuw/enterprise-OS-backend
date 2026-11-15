@@ -34,3 +34,11 @@ Organization owns WorkLocation/OfficeNetwork configuration. Employee owns employ
 
 ## Invariants
 WFO must match active office CIDR to active WorkLocation; remote must reference approved request covering local business date; punch requires verified evidence and location capture. Unique employee+business_date+kind (atau state machine constraint yang eksplisit) prevents duplicates; CHECK_OUT requires valid prior CHECK_IN. Use transaction/locking to prevent races. No cascade-delete history; correction is append-only adjustment.
+
+
+## Entitas policy presensi
+- AttendancePolicy(id, org_id, work_location_id nullable, name, status).
+- AttendancePolicyVersion(id, policy_id, version, effective_from, effective_to, gps_radius_m, gps_max_accuracy_m, shift_config, timezone, work_calendar_id, evidence_retention_days, exception_rules, change_reason, changed_by, approved_by nullable, created_at). Unique(policy_id,version); cegah periode overlap pada scope sama.
+- AttendancePunch menyimpan policy_version_id. Radius dipindahkan dari WorkLocation ke versi policy; policy owner tetap Attendance. CIDR kantor dikelola admin dengan tanggal efektif dan audit.
+
+Versi immutable setelah dipakai. Histori audit menyimpan actor, alasan, waktu, perubahan sebelum/sesudah, tanpa mencatat secret.
