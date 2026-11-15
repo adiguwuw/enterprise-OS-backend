@@ -1,18 +1,20 @@
 # EnterpriseOS Backend
 
-Backend Go untuk proyek portofolio EnterpriseOS. Semua perusahaan, pegawai, transaksi, dan data contoh adalah simulasi. Proyek ini tidak berafiliasi dengan Telkom dan tidak memakai data internal/rahasia Telkom.
+Backend blueprint untuk portofolio EnterpriseOS. Organisasi, pegawai, kebijakan, transaksi, dan akun demo seluruhnya fiktif. Telkom Indonesia hanya referensi struktur korporat yang dipublikasikan; proyek ini tidak berafiliasi dan tidak mengklaim mengetahui proses/internal Telkom.
 
-## Blueprint final
-Lihat `docs/README.md` untuk arsitektur, TDD, API, ERD, skenario uji, keputusan stack dan spesifikasi 24 modul.
+## Dokumen dan status
+Baca [indeks blueprint](docs/README.md), keputusan final, PRD, SRS, TDD, ERD, kontrak, skenario uji, dan spesifikasi per modul. Repository berisi blueprint; implementasi dibangun bertahap setelah review dokumen.
 
-## Lingkungan kerja
-Pengembangan dilakukan dari WSL/Linux shell. Jalankan layanan lokal menggunakan Docker Compose dan gunakan data sintetis.
+## Stack yang disepakati
+- Node.js LTS + Express 5 + TypeScript; modular monolith HTTP API, REST/JSON dan OpenAPI 3.1.
+- PostgreSQL: Neon Free untuk demo hosted dan PostgreSQL Docker Compose untuk WSL.
+- OIDC: Auth0 Free untuk demo hosted atau Keycloak lokal; Authorization Code + PKCE. Password tetap dikelola IdP.
+- Web/API: Vercel Hobby untuk demo portofolio. Express API harus stateless dan request singkat.
+- Bukti foto presensi: Supabase Storage Free, private bucket, unggah langsung dari browser memakai signed upload URL singkat yang backend keluarkan. PostgreSQL hanya menyimpan metadata.
+- RabbitMQ hanya bila Phase 5 mempunyai consumer konkret; lokal Compose. Redis tidak termasuk baseline.
 
-## Stack
-Go, PostgreSQL, REST/JSON, OpenAPI; OIDC melalui Auth0 Free untuk demo hosted dan Keycloak lokal. Vercel Hobby Go Functions digunakan hanya untuk HTTP handler portfolio; proses Go lokal berjalan sebagai services terpisah.
+## Biaya dan batas provider
+Gunakan layanan gratis tanpa kartu/billing dan tanpa upgrade. Free quota/eligibility dapat berubah; demo dapat pause bila kuota habis. Supabase Free storage saat keputusan ini ditulis memiliki kuota terbatas (1 GB); ukur dan tampilkan batas, jangan mengklaim SLA produksi. Jangan unggah data pribadi nyata. Vercel Functions memiliki batas body request/response 4.5 MB dan filesystem runtime tidak persisten; foto tidak boleh melewati request Express/Vercel. Jika storage free tidak tersedia, gunakan mock/local demo, jangan diam-diam beralih ke layanan berbayar.
 
-## Biaya
-Deployment memilih free tier saja. Jangan menambahkan service berbayar, memasang billing method, atau meng-upgrade plan. Bila kuota provider habis, layanan boleh berhenti sementara dan demo dijalankan lokal.
-
-## Status
-Repository ini memuat blueprint dan scaffold dokumentasi. Implementasi fitur dilakukan bertahap sesuai acceptance criteria pada blueprint.
+## WSL
+Jalankan Node, package manager sesuai lockfile, Docker Compose, migration, dan test dari WSL/Linux checkout. Jangan mencampur dependency Windows dan WSL. Simpan hanya .env.example pada Git; secret nyata tetap lokal.
