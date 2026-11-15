@@ -18,7 +18,7 @@ Employee melihat aturan hari ini, mengajukan WFH/WFA dengan alasan, punch check-
 Remote request: DRAFT → SUBMITTED → APPROVED | REJECTED | CANCELLED. Decision terminal; perubahan perlu request baru atau audited correction. Punch: INTENT → EVIDENCE_UPLOADED → VERIFIED → CHECKED_IN → CHECKED_OUT; manual adjustment terpisah dan append-only. Duplicate idempotency key mengembalikan hasil sama. Check-out harus mengikuti check-in; policy crossing local date ditentukan shift timezone.
 
 ## ERD
-- WorkLocation(id, org_id, name, address_label, kecamatan_code, lat, lon, timezone, geofence_radius_m, active).
+- WorkLocation(id, org_id, name, address_label, kecamatan_code, lat, lon, timezone, active). Radius dan GPS thresholds berasal dari policy version aktif.
 - OfficeNetwork(id, work_location_id, cidr, label, active, valid_from, valid_to).
 - RemoteWorkRequest(id, employee_id, mode WFH|WFA, from_date,to_date,requested_area_label,reason,status,submitted_at,version).
 - RemoteWorkDecision(id,request_id,manager_id,decision,reason,decided_at).
