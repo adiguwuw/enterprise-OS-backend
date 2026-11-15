@@ -34,3 +34,8 @@ Jangan menyebut produk patuh UU PDP/aturan ketenagakerjaan, production-grade/ant
 - Admin dengan permission dan scope organisasi yang tepat dapat mengelola radius GPS, accuracy maksimum, shift/timezone, kalender kerja/libur, retensi evidence, aturan exception, WorkLocation dan CIDR kantor.
 - Setiap perubahan harus memuat alasan dan effective date; backend membuat versi baru, memvalidasi batas dan overlap, mencatat audit before/after serta actor/waktu.
 - Punch menyimpan policy_version_id. Versi yang telah digunakan histori tidak diedit/dihapus. Role non-admin dan admin di luar scope mendapat deny. Maker-checker dapat diwajibkan untuk perubahan sensitif.
+
+## Role dan nilai awal policy presensi
+Role terpisah: Employee, Manager, Attendance Policy Admin, Attendance Policy Approver, HR Attendance Admin, Org Admin, IAM Admin, Auditor, Platform Admin. Terapkan permission per resource/action dan ABAC scope organisasi/lokasi/tim. Policy Admin tidak otomatis punya evidence.read; Platform Admin tidak otomatis punya akses HR; tidak boleh self-grant/elevation. Maker-checker aktif secara default untuk perubahan policy: actor pembuat berbeda dari approver.
+
+Seed demo: Asia/Jakarta; Senin–Jumat 09:00–17:00; istirahat 12:00–13:00; grace 15 menit; GPS radius 150 m; accuracy maksimum 100 m; lokasi berusia maksimal 60 detik; foto disimpan 30 hari; metadata attendance 365 hari. Dashboard dapat mengubahnya, tetapi server membatasi radius 25–500 m, accuracy 10–200 m, usia lokasi 30–300 detik, retensi foto 1–90 hari, metadata 30–3650 hari. Tidak ada CIDR aktif seeded; Admin wajib verifikasi public egress CIDR sebelum WFO diizinkan. Seluruh nilai hanya untuk demo portofolio.
