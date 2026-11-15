@@ -1,25 +1,23 @@
 # Product Brief / PRD
 
 ## Visi
-Portofolio full-stack yang menunjukkan desain produk enterprise aman dari identity/org foundation hingga workflow HR, ERP, operasi dan integrasi, namun dapat dikerjakan bertahap oleh satu fresh graduate dengan layanan gratis.
+EnterpriseOS adalah portofolio aplikasi internal enterprise yang menunjukkan penguasaan identity, organisasi, workflow HR, data ownership, security dan integrasi. Organisasi serta data demo sepenuhnya fiktif; Telkom Indonesia hanya referensi fungsi korporat publik.
 
-## Problem
-Data struktur, izin dan direktori pegawai sering terpecah; implementasi enterprise memerlukan batas akses, histori, audit dan kontrak API. EnterpriseOS mendemonstrasikan pondasi dan alur tersebut dengan data simulasi.
+## Pengguna
+Employee melihat profil dan mengajukan layanan; Manager menyetujui request dalam scope tim; HR Operator mengelola lifecycle; Org Admin mengelola struktur/lokasi; IAM Admin mengelola role/grant; Auditor membaca jejak secara read-only. Role ini persona simulasi.
 
-## Persona
-Employee (profil dan pencarian kolega); Manager (directory scope dan approval); HR Operator (lifecycle pegawai); Org Admin (unit/posisi/lokasi); IAM Admin (grant dan policy); Auditor (read-only audit/review). Semua role fiktif.
+## Nilai produk
+Satu pengalaman terpadu bagi employee dan admin, dengan izin server-side, struktur organisasi efektif tanggal, direktori terkontrol, dan workflow yang memiliki status, alasan keputusan dan audit. Demo harus bisa ditunjukkan end-to-end, termasuk skenario ditolak dan recovery.
 
-## MVP
-OIDC login; principal mapping; role+permission+scope; org tree efektif-tanggal; employee create/update/separation dasar; directory filter/detail dengan masking; audit event mutasi; UI admin dan employee. Seeder lokal sintetis. Sinkron DB cukup, RabbitMQ tidak masuk MVP.
+## Ruang lingkup fase
+1. Foundation: OIDC, principal, RBAC/ABAC, Organization/OrgUnit, Employee Directory.
+2. HR: Employee Management, attendance, leave, payroll sandbox, performance. Presensi WFO memakai public egress IP kantor yang dikonfigurasi; WFH/WFA melalui rekomendasi/keputusan atasan dengan alasan; setiap punch memiliki foto + bukti lokasi sesuai spesifikasi.
+3. ERP: Finance, Accounting, Procurement, Asset Management sebagai simulasi workflow.
+4. Business Operations: CRM, project, metadata dokumen, collaboration.
+5. Integrasi: RabbitMQ hanya untuk event consumer konkret; audit, monitoring, tracing.
 
 ## Outcome demo
-Perjalanan login → lihat struktur → cari directory → buka profil sesuai scope; admin buat unit dan pegawai; perubahan tercatat; user tanpa grant ditolak. Tunjukkan test authz negatif dan UI loading/empty/error. Tidak mengklaim benchmark production.
+Login → lihat org chart → cari directory → ajukan/minta keputusan kerja remote → clock in/out dengan foto dan lokasi → manager memeriksa bukti dalam scope → perubahan tercatat di audit. Demo menampilkan error izin kamera/GPS, IP tak cocok, file invalid, request belum disetujui, upload quota habis, dan koreksi manual.
 
-## Fase
-Phase 1 Foundation; Phase 2 HR (termasuk payroll sandbox); Phase 3 Finance/Accounting/Procurement/Assets; Phase 4 CRM/Project/DMS metadata/Collaboration; Phase 5 events/RabbitMQ/audit compliance/monitoring/tracing.
-
-## Non-goals
-ERP/CRM produksi, statutory payroll/tax, bank/payment, dokumen aman di cloud, keputusan HR otomatis, AI scoring, mobile native, integrasi berbayar, data pegawai nyata, SSO enterprise berbayar, SLA/certification claims.
-
-## Acceptance MVP
-Semua API terautentikasi; negative authz tests; directory hanya atribut terlihat dan scope-allowed tanpa count leak; org tree acyclic dan efektif tanggal; lifecycle HR konsisten; perubahan sensitif diaudit; duplicate request tidak menggandakan side effect; clone/run/test WSL didokumentasikan.
+## Batas
+Tidak memakai data pegawai nyata, bukan pengganti HR legal/payroll/statutory, tidak melakukan pengenalan wajah/monitoring kontinyu, tidak membuat keputusan HR otomatis, tidak mengklaim menyerupai proses internal Telkom. No paid service/billing. Produk diimplementasikan per vertical slice; fitur fase akhir bukan MVP.
