@@ -37,5 +37,13 @@
 | POL-05 | maker-checker aktif | creator tidak dapat menyetujui versinya sendiri |
 | POL-06 | tidak ada policy aktif pada waktu punch | fail closed atau exception audited; tidak ada default diam-diam |
 
+| POL-07 | seed policy baru | default demo sesuai nilai baseline Asia/Jakarta/09-17/radius 150m/accuracy 100m/retensi foto 30 hari |
+| POL-08 | admin memilih nilai batas minimum/maksimum dan di luar bounds | boundary accepted; out-of-bounds rejected server-side |
+| RBAC-01 | Policy Admin mengubah policy dalam scope | diizinkan; outside scope 403 |
+| RBAC-02 | Policy Admin mencoba melihat bukti foto tanpa grant | 403 |
+| RBAC-03 | creator menyetujui versi sendiri | 403; approver lain dapat menyetujui |
+| RBAC-04 | Platform Admin atau IAM Admin meminta data HR tanpa grant | 403; tidak ada akses implisit |
+| RBAC-05 | IAM Admin self-grant / assign Platform Admin | ditolak dan diaudit |
+| RBAC-06 | Manager melihat request di luar team scope | deny/404 sesuai anti-enumeration |
 
 Test layers: unit domain/policy, component handler, PostgreSQL integration+constraints, OpenAPI/event contract, E2E journey, security (authz matrix, IDOR, injection, CSRF/XSS/CORS, rate/body limit, secret scan). Merge gate format/lint/test/migration/OpenAPI/docs. Catat hasil aktual.
