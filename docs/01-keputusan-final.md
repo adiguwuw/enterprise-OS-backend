@@ -30,5 +30,12 @@ Gunakan modular monolith Express dengan bounded context. Satu PostgreSQL awal de
 ## Administrasi policy presensi
 Radius GPS, toleransi accuracy, shift/timezone, kalender/libur, retensi bukti, dan aturan exceptional punch ditetapkan Admin berwenang melalui Dashboard Admin. Perubahan disimpan sebagai versi baru dengan tanggal efektif, validasi server, alasan, audit perubahan sebelum/sesudah, dan riwayat immutable. Setiap punch menyimpan referensi versi policy yang berlaku saat itu; perubahan policy tidak mengubah histori. Rollback dilakukan dengan versi baru.
 
-## Keputusan terbuka
-Nilai awal policy, role admin yang berwenang, kebutuhan maker-checker untuk perubahan sensitif, dan default retensi demo perlu diputuskan sebelum rollout. Nilai bukan fakta Telkom atau kewajiban hukum.
+## Nilai awal demo (dapat diubah Admin)
+Nilai seed portofolio: timezone Asia/Jakarta; jadwal Senin–Jumat 09.00–17.00 dengan istirahat 12.00–13.00; grace window punch 15 menit; radius GPS 150 m; GPS accuracy maksimum 100 m; usia pembacaan lokasi maksimum 60 detik; retensi foto 30 hari; retensi metadata attendance 365 hari. Admin dapat mengubahnya melalui dashboard dalam bounds server: radius 25–500 m; accuracy maksimum 10–200 m; usia lokasi 30–300 detik; retensi foto 1–90 hari; metadata 30–3.650 hari. Semua nilai adalah default demo sintetis, bukan kebijakan Telkom/anjuran legal.
+
+CIDR kantor tidak diberi nilai aktif bawaan karena harus berasal dari public egress kantor yang benar-benar dikonfigurasi. Status lokasi/network seed adalah belum terverifikasi/nonaktif; WFO ditolak sampai Admin memverifikasi konfigurasi. IP fixture dokumentasi tidak boleh dipakai sebagai alamat nyata.
+
+## Role admin final untuk demo
+Pisahkan Employee, Manager, Attendance Policy Admin, Attendance Policy Approver, HR Attendance Admin, Org Admin, IAM Admin, Auditor dan Platform Admin. Hak selalu least-privilege dan dibatasi organization/location/team scope. Policy Admin dapat mengubah konfigurasi, tetapi tidak menyetujui perubahan sendiri jika maker-checker aktif. Policy Admin tidak otomatis dapat melihat foto; permission evidence.read diberikan terpisah. Platform Admin tidak otomatis memperoleh akses data HR. IAM Admin dapat memberi grant dalam scope yang ditugaskan tetapi tidak dapat menaikkan dirinya sendiri atau memberi role Platform Admin.
+
+Penetapan akun demo ke role dilakukan lewat seeder yang jelas fiktif; pada deployment, Admin harus ditugaskan secara eksplisit. Default awal maker-checker aktif.
