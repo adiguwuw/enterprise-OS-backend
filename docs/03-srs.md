@@ -28,3 +28,9 @@ UUID, timestamps UTC, business date + IANA timezone, money NUMERIC/currency. Cro
 
 ## Klaim yang dilarang
 Jangan menyebut produk patuh UU PDP/aturan ketenagakerjaan, production-grade/anti-fraud/anti-spoof, SLA atau setara praktik Telkom tanpa validasi independen.
+
+
+## Requirement Dashboard Admin presensi
+- Admin dengan permission dan scope organisasi yang tepat dapat mengelola radius GPS, accuracy maksimum, shift/timezone, kalender kerja/libur, retensi evidence, aturan exception, WorkLocation dan CIDR kantor.
+- Setiap perubahan harus memuat alasan dan effective date; backend membuat versi baru, memvalidasi batas dan overlap, mencatat audit before/after serta actor/waktu.
+- Punch menyimpan policy_version_id. Versi yang telah digunakan histori tidak diedit/dihapus. Role non-admin dan admin di luar scope mendapat deny. Maker-checker dapat diwajibkan untuk perubahan sensitif.
