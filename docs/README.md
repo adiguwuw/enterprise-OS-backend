@@ -49,3 +49,5 @@ API/ERD final berada di setiap spesifikasi modul dan kontrak global. Produk dike
 
 ## Keputusan tambahan presensi
 Policy operasional presensi ditetapkan Admin berwenang lewat Dashboard Admin: radius GPS, batas akurasi, shift/timezone, kalender kerja, retensi, exception dan konfigurasi lokasi/CIDR. Perubahan berversi, effective-dated, memiliki alasan dan audit; setiap punch merekam policy version. Detail API, ERD, test dan UI ada di SRS/TDD/ERD/kontrak/matriks backend dan attendance frontend.
+
+Nilai awal demo (dapat diubah dalam bounds): Asia/Jakarta; Senin–Jumat 09:00–17:00; break 12:00–13:00; grace 15 menit; GPS radius 150 m; accuracy maksimum 100 m; capture age 60 detik; retensi foto 30 hari; metadata 365 hari. Tidak ada CIDR kantor aktif sebelum Admin mengisi dan memverifikasinya. Role/permission baseline dan bounds detail berada pada spec Attendance.
