@@ -67,3 +67,16 @@ Least privilege on photos; private bucket; randomized object key; MIME/size allo
 
 ## Acceptance / Definition of Done
 OpenAPI schema, DB migration and frontend spec align; unit/domain + PostgreSQL integration + API contract + browser E2E cover scenarios; authz negative tests; upload adapter tests; audit redaction; documented WSL/local demo and free-tier quota behavior. No test is considered passed until executed and recorded.
+
+
+## Dashboard Admin dan policy presensi
+Admin berwenang mengatur radius GPS, ambang akurasi, shift/timezone, kalender kerja/libur, masa retensi foto/koordinat, aturan exception, WorkLocation dan office CIDR melalui Dashboard Admin. Nilai policy tidak di-hard-code; server tetap memvalidasi batas keamanan dan kelayakan nilai.
+
+Setiap perubahan memiliki tanggal efektif dan alasan, menghasilkan versi policy baru, menampilkan before/after, serta mencatat actor/waktu/audit. Punch menyimpan policy_version_id yang berlaku. Versi yang telah dipakai tidak boleh diubah atau dihapus; koreksi/rollback membuat versi baru. Cegah overlap tanggal efektif untuk scope lokasi yang sama. Hanya role attendance.policy:manage dengan org/location scope yang sesuai dapat mengubah; maker-checker dapat diwajibkan dan creator tidak boleh menyetujui versinya sendiri. Tidak ada policy aktif berarti fail closed atau exception audited sesuai konfigurasi, bukan memakai nilai default diam-diam.
+
+API admin: GET /api/v1/attendance/admin/policies; POST /attendance/admin/policies; POST /attendance/admin/policies/{id}/versions; POST /attendance/admin/policy-versions/{id}/approve bila maker-checker aktif; GET /attendance/admin/policies/{id}/history. Versi memuat radius, accuracy, shift, timezone, kalender, retensi, exception rules, effective dates, reason dan actor. Setiap endpoint memiliki OpenAPI schema dan permission.
+
+Model data attendance harus memiliki AttendancePolicy dan AttendancePolicyVersion. Field geofence_radius_m pada WorkLocation diganti dengan referensi konfigurasi versi policy. OfficeNetwork/CIDR juga dikelola sebagai perubahan konfigurasi efektif-tanggal dan diaudit.
+
+### Test policy admin
+POL-01 policy update valid membuat versi baru dan audit; POL-02 unauthorized/out-of-scope ditolak; POL-03 nilai invalid/alasan kosong/overlap/stale version ditolak atomik; POL-04 punch historis tetap menunjuk versi lama; POL-05 maker-checker melarang self-approval; POL-06 ketiadaan policy aktif tidak menggunakan default tersembunyi.
