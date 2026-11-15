@@ -27,5 +27,8 @@ Roadmap lima fase tetap sebagai katalog fitur portofolio, tetapi implementasi be
 ## Arsitektur dan data
 Gunakan modular monolith Express dengan bounded context. Satu PostgreSQL awal dengan schema/ownership terpisah; repository domain melarang query lintas konteks. Domain mutasi sensitif mencatat audit; outbox/event baru ketika consumer nyata diperlukan. UUID, UTC timestamptz, timezone bisnis eksplisit, amount NUMERIC.
 
+## Administrasi policy presensi
+Radius GPS, toleransi accuracy, shift/timezone, kalender/libur, retensi bukti, dan aturan exceptional punch ditetapkan Admin berwenang melalui Dashboard Admin. Perubahan disimpan sebagai versi baru dengan tanggal efektif, validasi server, alasan, audit perubahan sebelum/sesudah, dan riwayat immutable. Setiap punch menyimpan referensi versi policy yang berlaku saat itu; perubahan policy tidak mengubah histori. Rollback dilakukan dengan versi baru.
+
 ## Keputusan terbuka
-Kebijakan radius GPS, toleransi accuracy, jam/shift, kalender/libur, masa retensi foto/koordinat, alur exceptional punch, dan batas kuota demo adalah konfigurasi portofolio yang harus disetujui sebelum implementasi presensi. Jangan mengisi sebagai fakta Telkom atau kewajiban hukum.
+Nilai awal policy, role admin yang berwenang, kebutuhan maker-checker untuk perubahan sensitif, dan default retensi demo perlu diputuskan sebelum rollout. Nilai bukan fakta Telkom atau kewajiban hukum.
