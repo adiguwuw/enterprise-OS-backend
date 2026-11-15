@@ -2,6 +2,11 @@
 
 Blueprint portofolio, bukan implementasi selesai. Seluruh organisasi, pegawai, transaksi dan event adalah fiksi. Referensi Telkom hanya inspirasi fungsi organisasi yang dipublikasikan; tidak menyalin bagan internal, kebijakan, data atau sistem rahasia. Frontend: https://github.com/adiguwuw/enterprise-OS-frontend
 
+## Stack yang disepakati
+Node.js LTS + Express 5 + TypeScript sebagai modular monolith; React + TypeScript + Vite + shadcn/ui; PostgreSQL Neon Free dan Docker Compose lokal WSL; OIDC free hosted/Keycloak lokal; Vercel Hobby untuk demo stateless; Supabase Storage Free private untuk foto presensi direct upload. Tanpa kartu, billing, upgrade atau fallback berbayar. Kuota/ketentuan gratis dapat berubah dan tidak menjamin production SLA.
+
+Presensi Phase 2: WFO divalidasi dari IP egress publik kantor yang dipetakan ke lokasi terkonfigurasi; WFH/WFA memerlukan persetujuan atasan beserta alasan; setiap punch memakai foto privat dan GPS. Tidak ada SSID/BSSID browser, IP geolocation kecamatan, pelacakan latar belakang, pengenalan wajah, atau foto melalui Vercel. Detail dan kebijakan terbuka ada di keputusan final, SRS, TDD dan spesifikasi Attendance.
+
 ## Review dokumen berurutan
 1. docs/01-keputusan-final.md — batas produk, teknologi dan biaya.
 2. docs/02-product-brief-prd.md — pengguna, nilai dan outcome.
