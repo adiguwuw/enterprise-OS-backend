@@ -1,26 +1,31 @@
 # Keputusan Final
 
 ## Produk dan integritas referensi
-EnterpriseOS adalah portofolio internal enterprise untuk organisasi fiktif. Telkom Indonesia hanya referensi terbuka untuk memahami ragam fungsi korporat publik; aplikasi tidak berafiliasi, tidak mengaku memakai bagan internal, data pegawai, kebijakan, workflow atau sistem Telkom. Semua nama dan dataset demo fiktif.
+EnterpriseOS adalah aplikasi enterprise fiktif untuk portofolio. Telkom Indonesia hanya rujukan dari struktur/fungsi publik untuk inspirasi kategori organisasi; tidak berafiliasi, tidak meniru klaim internal, tidak memakai data/kebijakan rahasia. Semua perusahaan, unit, role, pegawai dan skenario demo adalah simulasi.
 
 ## Stack final — gratis saja
-- Frontend: React + TypeScript + Vite + shadcn/ui; deploy Vercel Hobby dengan subdomain gratis.
-- Backend: Go REST/JSON, OpenAPI, API gateway/HTTP routing; Vercel Go Functions menangani request pendek saja.
-- PostgreSQL: Neon Free hosted dan PostgreSQL Docker Compose di WSL.
-- OIDC: Auth0 Free untuk demo hosted, Keycloak lokal. Authorization Code + PKCE; aplikasi tidak menyimpan password.
-- RabbitMQ baru Phase 5: Docker Compose lokal; CloudAMQP free boleh sebagai demo opsional, bukan kebutuhan. Worker berjalan lokal, bukan Vercel.
-- Redis tidak digunakan; PostgreSQL cukup untuk MVP. File DMS hanya metadata dan fixture lokal. Metrics/tracing OSS lokal optional. Tidak memakai layanan email/SMS, bank, storage cloud atau monitoring berbayar.
+- Backend: Node.js LTS, Express 5, TypeScript, REST/JSON, OpenAPI 3.1; modular monolith.
+- Frontend: React + TypeScript + Vite + shadcn/ui.
+- Data: PostgreSQL Neon Free hosted dan PostgreSQL Docker Compose di WSL.
+- Identity: Auth0 Free hosted atau Keycloak lokal; OIDC Authorization Code + PKCE. Evaluasi syarat free tier saat deploy, tanpa memasukkan billing.
+- Hosting: Vercel Hobby untuk demo frontend/API stateless. Jangan menaruh worker persisten atau file pada filesystem function.
+- Foto presensi: Supabase Storage Free private bucket, direct-to-storage upload dengan signed upload URL berumur pendek; PostgreSQL menyimpan metadata. Saat kuota free provider tidak mencukupi, matikan hosted upload dan jalankan demo lokal/mock.
+- RabbitMQ: baru Phase 5 dan hanya bila ada consumer konkret; lokal Compose. Redis ditolak dari baseline tanpa benchmark+ADR.
 
-Free tier memiliki kuota dan ketentuan yang dapat berubah. Tidak menambahkan kartu/billing, paid plan, custom domain berbayar atau fallback berbayar. Saat limit tercapai demo boleh pause dan dijalankan lokal. Hobby hosting bukan jaminan production SLA dan tunduk syarat personal/noncommercial provider. Cek syarat vendor saat deploy.
+Kuota dan syarat provider dapat berubah. Jangan membeli, menambahkan kartu, mengaktifkan billing, atau upgrade. Free-tier bukan jaminan SLA produksi. Supabase Free memiliki kuota penyimpanan terbatas; gunakan hanya data sintetis dan tangani kuota penuh dengan aman. Vercel Functions membatasi request/response body sekitar 4.5 MB dan filesystem-nya sementara/tidak persisten, sehingga bytes foto tidak dikirim melewati function.
 
-## Boundary produk
-MVP: Organization, IAM/SSO, RBAC/ABAC, struktur perusahaan simulasi, employee basics, directory, audit dasar. Fase 2–5 adalah blueprint untuk tahap berikutnya. Payroll, accounting, procurement, compliance hanya simulasi, bukan penerapan kewajiban hukum atau pemrosesan uang.
+## Batas produk
+Roadmap lima fase tetap sebagai katalog fitur portofolio, tetapi implementasi bertahap dan setiap fase harus punya acceptance. Phase 1: Organization, IAM/SSO, RBAC/ABAC, struktur, directory. Phase 2 HR meliputi employee, attendance, leave, payroll sandbox, performance. Fase lanjut ERP, operasi, integrasi. Tidak ada klaim bahwa payroll adalah kalkulator legal atau sistem menangani uang sungguhan.
 
-## Keputusan arsitektur
-Gunakan Go modular monolith dengan bounded context. Jangan pecah 24 modul jadi microservices untuk seorang developer. Single PostgreSQL project awal; tiap konteks punya ownership dan repository boundary. Tidak ada FK/query lintas konteks. Outbox/RabbitMQ setelah event consumer nyata dibutuhkan. Redis ditolak sampai benchmark dan ADR membuktikan manfaat.
+## Keputusan presensi
+- WFO: validasi server terhadap public egress IP/CIDR kantor yang dikonfigurasi pada lokasi kerja; browser tidak dapat membaca SSID/BSSID secara andal. IP hanya sinyal lokasi jaringan, bukan bukti identitas tunggal. Jangan percaya X-Forwarded-For kecuali proxy tepercaya dikonfigurasi.
+- WFH/WFA: pegawai mengajukan jadwal/lokasi dan alasan; atasan berwenang memutuskan approve/reject dengan alasan wajib. Punch remote hanya untuk request approved dan hari yang sesuai.
+- Setiap check-in/out mengharuskan foto bukti yang diambil saat aksi dan koordinat GPS browser beserta accuracy/timestamp izin. Untuk WFO, IP dipetakan ke WorkLocation terkonfigurasi (termasuk label kecamatan); GPS tetap dicatat bila diizinkan sebagai sinyal tambahan. Untuk remote, koordinat GPS harus berada dalam kebijakan radius yang dapat dikonfigurasi; tidak mengandalkan geolokasi IP untuk menentukan kecamatan karena akurasinya tidak memadai.
+- Foto diunggah langsung ke Supabase private bucket memakai signed URL; simpan object key, checksum/ukuran/mime, waktu, aktor dan status verifikasi. URL signed tidak disimpan sebagai permanen.
+- Tidak ada pelacakan latar belakang, pengenalan wajah, biometrik, spoof-proof claim, atau keputusan disipliner otomatis. Berikan alternatif koreksi manual dengan audit saat izin kamera/GPS atau jaringan bermasalah. Retensi dan akses harus dapat dikonfigurasi; jangan klaim kepatuhan UU PDP.
 
-## Konvensi final
-UUID; UTC timestamps; timezone bisnis eksplisit; amount NUMERIC + currency; API /api/v1; OpenAPI 3.1; cursor pagination; problem response dengan request_id; JWT access token OIDC; default deny; idempotency untuk retryable command; ETag/If-Match untuk concurrency; audit/outbox transactional.
+## Arsitektur dan data
+Gunakan modular monolith Express dengan bounded context. Satu PostgreSQL awal dengan schema/ownership terpisah; repository domain melarang query lintas konteks. Domain mutasi sensitif mencatat audit; outbox/event baru ketika consumer nyata diperlukan. UUID, UTC timestamptz, timezone bisnis eksplisit, amount NUMERIC.
 
-## Keputusan tertunda secara kebijakan (bukan hambatan teknis)
-Kuota cuti, formula payroll/tax, retention hukum, klasifikasi bisnis dan SLA produksi harus tetap demo-configurable dan **tidak diisi sebagai fakta** tanpa pemilik kebijakan. Tidak diperlukan untuk Phase 1. Tidak ada klaim kepatuhan.
+## Keputusan terbuka
+Kebijakan radius GPS, toleransi accuracy, jam/shift, kalender/libur, masa retensi foto/koordinat, alur exceptional punch, dan batas kuota demo adalah konfigurasi portofolio yang harus disetujui sebelum implementasi presensi. Jangan mengisi sebagai fakta Telkom atau kewajiban hukum.
