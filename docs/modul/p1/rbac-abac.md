@@ -60,3 +60,16 @@ Error umum: 400 schema invalid, 401 token invalid, 403 disallowed, 404 missing/o
 
 ## Definition of Done
 Acceptance di atas + semua test ID lulus otomatis; migration dari DB kosong dan upgrade path berhasil; OpenAPI contoh response cocok; permission negative test ada; fixture sintetis; UI state unauthorized/error/loading/empty bila ada UI; README WSL dan dokumentasi diperbarui. Jangan klaim test telah berjalan sebelum benar-benar dijalankan.
+
+
+## Role baseline presensi (demo)
+- Employee: presensi dan request remote milik sendiri.
+- Manager: request/adjustment review dan team read dalam scope reporting line.
+- Attendance Policy Admin: policy, work location, office network dalam scope assigned; tidak otomatis evidence read.
+- Attendance Policy Approver: approve policy version; wajib berbeda dari creator.
+- HR Attendance Admin: report dan adjustment dalam HR scope; photo evidence perlu grant terpisah.
+- Org Admin: location/organization management tanpa implicit HR data access.
+- IAM Admin: assign role dalam scope; tidak self-grant dan tidak dapat memberi Platform Admin.
+- Auditor: audit dan policy history read-only; bukan foto.
+- Platform Admin: platform config, tidak otomatis dapat data HR.
+Permission key rinci, test matrix, scope dan seed values berada di docs/modul/p2/attendance.md dan docs/06-kontrak-api-event.md. Assignments selalu effective-dated, scoped, audited dan default deny.
