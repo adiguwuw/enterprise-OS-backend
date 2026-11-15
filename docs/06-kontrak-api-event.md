@@ -23,3 +23,12 @@ Upload bytes direct from browser to Supabase private bucket via short-lived sign
 {"id":"uuid","type":"employee.assignment.changed","version":1,"occurred_at":"RFC3339","producer":"employee-management","aggregate":{"type":"employee","id":"uuid","version":7},"correlation_id":"uuid","causation_id":null,"data":{},"metadata":{"schema_uri":"..."}}
 ```
 No tokens, photos, storage URLs, raw coordinates, raw IP, private HR/payroll or decision reason. Prefer reference IDs/status codes and authorized API retrieval. Outbox atomic; inbox dedupe; at-least-once delivery; DLQ/replay permissioned and audited. Do not add RabbitMQ before a real subscriber exists.
+
+
+## API Dashboard Admin — policy presensi
+- GET /api/v1/attendance/admin/policies?work_location_id= — policy aktif dan versi efektif; permission attendance.policy:read.
+- POST /api/v1/attendance/admin/policies — membuat policy dalam scope admin.
+- POST /api/v1/attendance/admin/policies/{id}/versions — membuat versi dengan effective_from/effective_to, gps_radius_m, gps_max_accuracy_m, shift/timezone, work_calendar_id, evidence_retention_days, exception_rules dan change_reason.
+- POST /api/v1/attendance/admin/policy-versions/{id}/approve — hanya bila maker-checker aktif; approver berbeda dari creator.
+- GET /api/v1/attendance/admin/policies/{id}/history — riwayat versi/audit.
+Backend menolak nilai di luar batas keamanan, alasan kosong, overlap tanggal, scope tidak sah dan stale If-Match. Punch menyimpan policy_version_id. Versi yang sudah berlaku tidak dapat diedit; koreksi menjadi versi baru.
