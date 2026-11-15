@@ -45,3 +45,7 @@ Presensi Phase 2: WFO divalidasi dari IP egress publik kantor yang dipetakan ke 
 
 ## Keputusan sumber kebenaran
 API/ERD final berada di setiap spesifikasi modul dan kontrak global. Produk dikembangkan sebagai modular monolith, bukan 24 deployable services. Repository ini saat ini dokumentasi/scaffold saja; kode belum dibuat. Mulai development hanya pada vertical slice Phase 1 setelah urutan review.
+
+
+## Keputusan tambahan presensi
+Policy operasional presensi ditetapkan Admin berwenang lewat Dashboard Admin: radius GPS, batas akurasi, shift/timezone, kalender kerja, retensi, exception dan konfigurasi lokasi/CIDR. Perubahan berversi, effective-dated, memiliki alasan dan audit; setiap punch merekam policy version. Detail API, ERD, test dan UI ada di SRS/TDD/ERD/kontrak/matriks backend dan attendance frontend.
