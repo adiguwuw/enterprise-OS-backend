@@ -42,3 +42,17 @@ WFO must match active office CIDR to active WorkLocation; remote must reference 
 - AttendancePunch menyimpan policy_version_id. Radius dipindahkan dari WorkLocation ke versi policy; policy owner tetap Attendance. CIDR kantor dikelola admin dengan tanggal efektif dan audit.
 
 Versi immutable setelah dipakai. Histori audit menyimpan actor, alasan, waktu, perubahan sebelum/sesudah, tanpa mencatat secret.
+
+## RBAC role/permission seed
+Permission seeds:
+- Employee: attendance.self.read, attendance.remote_work.create, attendance.punch.create, attendance.evidence.read.self.
+- Manager: attendance.team.read, attendance.remote_work.review (team scope), attendance.adjustment.review (team scope).
+- Attendance Policy Admin: attendance.policy.read/manage dan attendance.location.manage, attendance.office_network.manage (org/location scope); tidak otomatis evidence.read.
+- Attendance Policy Approver: attendance.policy.approve; approval scope terpisah, tidak boleh approve perubahan sendiri.
+- HR Attendance Admin: attendance.team.read, attendance.adjustment.create/approve dan attendance.report.export (HR scope); evidence.read memerlukan grant tersendiri.
+- Org Admin: organization.location.manage (assigned org scope), tidak otomatis policy/evidence access.
+- IAM Admin: iam.role_assignment.manage pada scope yang ditugaskan; tidak dapat self-grant atau grant Platform Admin.
+- Auditor: audit.read dan attendance.policy.history.read (read-only scoped), tanpa foto secara default.
+- Platform Admin: platform.config.manage; tidak otomatis HR/attendance data access.
+
+Role assignments memuat principal_id, role_id, scope_type, scope_id, valid_from/to, assigned_by. Admin dashboard menampilkan hanya actions yang authorized; API memeriksa ulang semua permission.
