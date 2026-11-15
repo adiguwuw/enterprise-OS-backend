@@ -27,3 +27,7 @@ IP kantor diambil dari request peer/proxy chain yang disanitasi konfigurasi trus
 
 ## Test approach
 Test domain state machine, IP CIDR/trusted proxy, remote approval + reason, location accuracy/radius, signed upload ownership/expiry, MIME/size/confirmation, idempotency/concurrency, scope, audit access and privacy redaction. Integration memakai PostgreSQL migrasi fresh dan storage adapter fake/local; contract test OpenAPI; E2E sintetis. Tidak pernah menggunakan foto/PII riil.
+
+
+## Policy management presensi
+Policy adalah aggregate berversi milik Attendance. Admin mengubahnya melalui API Dashboard; backend memvalidasi bounds, effective date, overlap, org/location scope, permission, reason dan If-Match. Simpan versi baru serta audit before/after atomik; bila maker-checker aktif, creator tidak dapat menyetujui versinya. Resolver memilih policy aktif pada waktu kerja dan punch menyimpan versi yang digunakan. Versi historis immutable; rollback dibuat sebagai versi baru. Cache tidak boleh melampaui effective boundary dan resolver fail closed bila tidak ada policy aktif.
