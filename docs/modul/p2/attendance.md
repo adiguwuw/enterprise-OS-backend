@@ -80,3 +80,39 @@ Model data attendance harus memiliki AttendancePolicy dan AttendancePolicyVersio
 
 ### Test policy admin
 POL-01 policy update valid membuat versi baru dan audit; POL-02 unauthorized/out-of-scope ditolak; POL-03 nilai invalid/alasan kosong/overlap/stale version ditolak atomik; POL-04 punch historis tetap menunjuk versi lama; POL-05 maker-checker melarang self-approval; POL-06 ketiadaan policy aktif tidak menggunakan default tersembunyi.
+
+## Nilai awal dan bounds admin
+| Pengaturan | Default demo | Bounds server | Catatan |
+|---|---:|---:|---|
+| Timezone lokasi | Asia/Jakarta | timezone IANA valid | Admin dapat memilih zona lokasi |
+| Hari kerja | Senin–Jumat | kalender kerja yang dikonfigurasi | Demo saja |
+| Jam shift | 09:00–17:00 | start < end; shift lintas hari didukung eksplisit | waktu lokal timezone lokasi |
+| Istirahat | 12:00–13:00 | berada di dalam shift | tidak dihitung kerja |
+| Grace punch | 15 menit | 0–60 menit | check-in/out; disimpan dalam policy |
+| Radius GPS | 150 m | 25–500 m | dari titik kerja yang disetujui |
+| Akurasi GPS maksimum | 100 m | 10–200 m | nilai accuracy lebih tinggi ditolak/exception |
+| Usia capture GPS maksimum | 60 detik | 30–300 detik | dibanding server time, toleransi clock terpisah |
+| Retensi foto evidence | 30 hari | 1–90 hari | hanya demo; deletion job harus audit |
+| Retensi metadata attendance | 365 hari | 30–3.650 hari | demo; histori tidak cascade-delete |
+| Office egress CIDR | kosong/nonaktif sampai diverifikasi | CIDR publik valid dan non-overlap | wajib dikonfigurasi Admin; WFO ditolak sebelum itu |
+| Maker-checker policy | aktif | wajib aktif untuk demo | creator berbeda dari approver |
+
+Admin dapat mengubah semua default yang memiliki bounds dari halaman policy; API menolak nilai di luar rentang. Ubah shift/jadwal, radius, accuracy, retensi dan exception hanya dengan versi baru + effective date + reason + audit. Seed profile tidak otomatis membuka WFO: Admin harus memasukkan public egress CIDR yang benar dan menandai verified setelah uji koneksi. CIDR dokumentasi/test tidak boleh menjadi konfigurasi live.
+
+## Role presensi dan izin (seed demo)
+| Role | Permission kunci | Scope / larangan |
+|---|---|---|
+| Employee | attendance.self.read, attendance.remote_work.create, attendance.punch.create, attendance.evidence.read.self | hanya dirinya |
+| Manager | attendance.team.read, attendance.remote_work.review, attendance.adjustment.review | bawahan dalam scope; tidak bisa mengubah policy |
+| Attendance Policy Admin | attendance.policy.read/manage, attendance.location.manage, attendance.office_network.manage | org/lokasi assigned; tidak otomatis melihat foto |
+| Attendance Policy Approver | attendance.policy.approve | scope assigned; creator tidak dapat approve versinya |
+| HR Attendance Admin | attendance.team.read, attendance.adjustment.create/approve, attendance.report.export | HR scope; foto perlu grant evidence.read terpisah |
+| Org Admin | organization.location.manage | hanya org assigned; bukan akses otomatis ke attendance |
+| IAM Admin | iam.role_assignment.manage | scope assigned; dilarang self-grant atau assign Platform Admin |
+| Auditor | audit.read, attendance.policy.history.read | read-only; foto tidak diberikan default |
+| Platform Admin | platform.config.manage | tanpa akses HR/attendance implisit |
+
+Role assignment memuat scope type/id dan validity. Role bersifat permission bundle; grant individu tambahan wajib beralasan dan diaudit. Maker-checker aktif; approver policy tidak boleh sama dengan creator. Manager request approval dan HR adjustment approval juga harus menerapkan separation of duties bila workflow mengaktifkannya.
+
+## Acceptance policy/role
+POL-07/08 dan RBAC-01–06 pada matriks integrasi wajib lulus sebelum slice Dashboard Admin diterima.
