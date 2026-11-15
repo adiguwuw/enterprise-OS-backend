@@ -1,27 +1,25 @@
 # Roadmap Development dan Urutan Review
 
-## Review pertama sampai terakhir
-1 Product brief + keputusan final (apa produk, batas, free stack).
-2 SRS, persona, privacy dan acceptance.
-3 TDD dan batas domain/deploy.
-4 ERD global dan data ownership.
-5 Spesifikasi Phase 1 per modul beserta test case.
-6 Kontrak API/event dan test integration.
-7 Frontend route/UX/API/test blueprint di repo frontend.
-8 Roadmap, DoR/DoD dan baru mulai development.
+## Urutan review dokumen
+1. Keputusan final + product brief: tujuan, audience, portofolio/fiksi, stack gratis dan scope.
+2. SRS: requirements, attendance privacy, failure/exception policies.
+3. TDD + ADR: module boundaries, Vercel constraints, upload trust design.
+4. ERD global + ownership dan invariants.
+5. Spesifikasi tiap modul dan acceptance tests (mulai Phase 1).
+6. Kontrak OpenAPI/event dan test matrix.
+7. Blueprint frontend: routes, states, API, tests.
+8. Roadmap dan coding-agent guardrails; development hanya setelah review keputusan terbuka yang menghalangi slice selesai.
 
-## Tahap development
-0 Bootstrap dua repo di WSL: versi Go/Node dicatat, Compose PostgreSQL+Keycloak, env.example tanpa secret, CI.
-1 Phase 1 vertical slice: health → OIDC → principal → org tree → RBAC/scope → employee basics → directory → audit → UI → integration tests.
-2 HR: lifecycle, attendance, leave, performance, lalu payroll sandbox paling akhir dengan maker-checker/privacy tests.
-3 ERP: budget/expense → journal post/reverse → procurement approval/receipt → asset lifecycle.
-4 Operations: project → CRM → document metadata only → collaboration.
-5 Platform: outbox/inbox → Rabbit local worker → access review/audit → metrics/logs → tracing/failure recovery.
+## Urutan implementasi
+0. Reconcile/reset local worktree only after explicit review; bootstrap Node LTS + Express 5 TS + React TS in WSL; lockfile, env examples, Compose PostgreSQL/Keycloak, free-provider setup, CI.
+1. Foundation vertical slices: health/config → OIDC → principal → org structure → RBAC/ABAC → employee basics → directory → audit.
+2. HR: employee lifecycle → attendance policy/config + remote-work approval + evidence upload/punch → leave → performance → payroll sandbox terakhir.
+3. ERP: expense/budget → journal posting/reversal → procurement approval/receipt → asset lifecycle.
+4. Operations: project → CRM → document metadata → collaboration.
+5. Platform: audit review/retention → outbox/inbox and RabbitMQ only for real consumer → monitoring/logs → tracing.
 
-## Ready/Done
-Ready: actor, acceptance Given/When/Then, schema, endpoint, owner, permission, negative tests, UI state, policies known. Done: tests for all scenario IDs pass, migration fresh/upgrade, OpenAPI/ERD match, authz/privacy checks, UI states, docs/WSL steps, no new paid dependency.
+## Attendance readiness gate
+Sebelum coding kunci policy radius GPS, accuracy threshold, shifts/timezone, exceptional punch, retention and reviewer access. Implement IP/CIDR trusted proxy path and private upload direct-to-storage with tests. Free storage quota exhaustion must fail safely.
 
-## Task template
-[ ] Baca spec → [ ] kunci acceptance/contract → [ ] tulis failing tests → [ ] migration/repository → [ ] domain+authz → [ ] handler/OpenAPI → [ ] integration/security tests → [ ] FE journey → [ ] jalankan suite di WSL → [ ] update docs.
-
-Hentikan task jika butuh kebijakan hukum/HR yang tak tersedia, migration berisiko menghapus data, scope authorization tak dapat dibuktikan, atau dependency berbayar muncul; catat keputusan dan pilih behavior aman.
+## Ready / Done
+Ready: actor, Given/When/Then IDs, schema, endpoint, ownership, permission, negative tests, UI state, policy known. Done: tests pass, migration fresh/upgrade, OpenAPI/ERD match, authz/privacy controls and redaction verified, WSL steps, no paid dependency.
